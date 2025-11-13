@@ -1,70 +1,73 @@
-const mqtt = require('mqtt');
+const express = require('express');
+const cors = require('cors');
+require('dotenv').config();
 
-// 1. Cấu hình kết nối
-// Thay thế bằng thông tin thực tế của bạn
-const brokerUrl = 'mqtts://dbdd316e91e448408b3570eb798874b2.s1.eu.hivemq.cloud:8883';
-const topicToSubscribe = 'fuelLevel'; // <=== Thay thế topic của bạn
+const apiRoutes = require('./src/api');
+const MqttService = require('./src/services/mqttService');
 
-const options = {
-    // BẮT BUỘC: Vì dùng cổng 8883 (TLS), phải dùng mqtts://
-    protocol: 'mqtts',
+const app = express();
 
-    // TÙY CHỌN: Nếu bạn đã thiết lập bảo mật trong HiveMQ Cloud
-    username: 'iotnhom16',
-    password: 'Iotnhom16',
+// Middleware
+app.use(cors()); // Enable CORS cho Frontend
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-    // Cài đặt thêm (nên có)
-    clean: true,
-    clientId: 'mqtt_backend_' + Math.random().toString(16).substr(2, 8),
-};
+// Logging middleware
+app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+    next();
+});
 
-// 2. Tạo Client và Kết nối
-console.log('Đang kết nối tới HiveMQ Cloud...');
-const client = mqtt.connect(brokerUrl, options);
+// Mount API routes
+app.use('/api', apiRoutes);
 
-// 3. Xử lý sự kiện 'connect' (Kết nối thành công)
-client.on('connect', () => {
-    console.log('✅ Đã kết nối thành công với Broker!');
-
-    // Đăng ký (Subscribe) vào topic
-    client.subscribe(topicToSubscribe, (err) => {
-        if (!err) {
-            console.log(`Đã đăng ký (subscribe) vào topic: ${topicToSubscribe}`);
-        } else {
-            console.error('Lỗi khi đăng ký:', err);
-        }
+// Root endpoint
+app.get('/', (req, res) => {
+    res.json({
+        message: 'Vehicle Tracking Backend API',
+        version: '1.0.0',
+        documentation: '/api'
     });
 });
 
-// 4. Xử lý sự kiện 'message' (Nhận dữ liệu)
-client.on('message', (topic, message) => {
-    // Dữ liệu được trả về dưới dạng Buffer, cần chuyển thành String
-    const payload = message.toString();
-
-    console.log('--------------------------------------------------');
-    console.log(`Nhận được dữ liệu từ Topic: ${topic}`);
-    console.log(`Dữ liệu (String): ${payload}`);
-
-    // THAO TÁC QUAN TRỌNG: 
-    // - Parse dữ liệu (thường là JSON)
-    try {
-        const data = JSON.parse(payload);
-        console.log('Dữ liệu (JSON):', data);
-
-        // ===>>> XỬ LÝ DỮ LIỆU TẠI ĐÂY: Lưu vào Database, gửi qua Socket.IO, v.v.
-
-    } catch (e) {
-        console.error('Dữ liệu không phải là JSON hợp lệ.');
-    }
+// 404 handler
+app.use((req, res) => {
+    res.status(404).json({
+        success: false,
+        message: 'Endpoint không tồn tại',
+        path: req.path
+    });
 });
 
-// 5. Xử lý sự kiện 'error'
-client.on('error', (err) => {
-    console.error('❌ Lỗi kết nối MQTT:', err);
-    client.end();
+// Error handler
+app.use((err, req, res, next) => {
+    console.error('Error:', err);
+    res.status(500).json({
+        success: false,
+        message: 'Internal Server Error',
+        error: err.message
+    });
 });
 
-// 6. Xử lý sự kiện 'close'
-client.on('close', () => {
-    console.log('Đã ngắt kết nối MQTT.');
+// Khởi động MQTT Service
+console.log('🚀 Đang khởi động MQTT Service...');
+MqttService.init();
+
+// Graceful shutdown
+process.on('SIGINT', () => {
+    console.log('\n🛑 Đang shutdown server...');
+    MqttService.close();
+    process.exit(0);
 });
+
+// Start HTTP server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log('═══════════════════════════════════════════════════');
+    console.log(`🚀 Server đang chạy trên port ${PORT}`);
+    console.log(`📍 API: http://localhost:${PORT}/api`);
+    console.log(`🏥 Health: http://localhost:${PORT}/api/health`);
+    console.log('═══════════════════════════════════════════════════\n');
+});
+
+module.exports = app;
