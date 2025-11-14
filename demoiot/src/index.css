@@ -1,0 +1,23 @@
+/* Chỉ giữ lại 3 dòng này ở trên cùng */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* XÓA 2 DÒNG @import ĐÃ BỊ BÔI VÀNG KHỎI ĐÂY */
+
+/* 4. CSS tuỳ chỉnh cho body và chiều cao */
+body {
+    background-color: #f0f2f5;
+}
+
+.map-widget-content {
+    height: 400px;
+    width: 100%;
+}
+.chart-widget-content {
+    height: 400px;
+    width: 100%;
+}
+.full-page-map {
+    height: calc(100vh - 200px);
+}
