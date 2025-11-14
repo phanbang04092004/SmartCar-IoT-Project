@@ -144,6 +144,7 @@ class TrackingService {
         }
     }
     // Lấy lịch sử mực xăng
+// Lấy lịch sử mực xăng
 static async getFuelHistory(limit = 100, startTime, endTime) {
     try {
         let query = 'SELECT id, timestamp, level, created_at FROM fuel_levels WHERE 1=1';
@@ -158,8 +159,11 @@ static async getFuelHistory(limit = 100, startTime, endTime) {
             params.push(endTime);
         }
 
-        query += ' ORDER BY timestamp DESC LIMIT ?';
-        params.push(parseInt(limit));
+        // validate limit
+        limit = parseInt(limit);
+        if (isNaN(limit) || limit <= 0) limit = 100;
+
+        query += ` ORDER BY timestamp DESC LIMIT ${limit}`; // bind trực tiếp
 
         const [rows] = await db.execute(query, params);
         return rows;
@@ -184,8 +188,11 @@ static async getTrunkHistory(limit = 100, startTime, endTime) {
             params.push(endTime);
         }
 
-        query += ' ORDER BY timestamp DESC LIMIT ?';
-        params.push(parseInt(limit));
+        // validate limit
+        limit = parseInt(limit);
+        if (isNaN(limit) || limit <= 0) limit = 100;
+
+        query += ` ORDER BY timestamp DESC LIMIT ${limit}`; // bind trực tiếp
 
         const [rows] = await db.execute(query, params);
         return rows;
@@ -194,7 +201,6 @@ static async getTrunkHistory(limit = 100, startTime, endTime) {
         throw error;
     }
 }
-
 }
 
 module.exports = TrackingService;
