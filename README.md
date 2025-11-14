@@ -1,9 +1,9 @@
 1. Cài đặt các gói:
 
-npm install
+   npm install
 
 2. Khởi động dự án
 
-npm start:
+   npm start:
 
 
