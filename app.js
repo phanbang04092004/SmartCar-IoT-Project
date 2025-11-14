@@ -76,7 +76,7 @@ process.on('SIGINT', () => {
 
 // Start HTTP server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log('═══════════════════════════════════════════════════');
     console.log(`🚀 Server đang chạy trên port ${PORT}`);
     console.log(`📍 API: http://localhost:${PORT}/api`);
