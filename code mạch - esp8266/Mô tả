@@ -18,10 +18,20 @@
 - Cảm biến đóng mở cốp bao gồm 2 chân:
   + 1 chân kết nối tới cổng GND trên vi xử lí.
   + 1 chân kết nối tới cổng GPIO15 trên vi xử lí.
+
 3. Hoạt động:
+- Cảm biến GPS:
+  + Trả về tín hiệu thu được từ vệ tinh, vi xử lí tính toán các giá trị: latitude, longtitude dựa trên tín hiệu này.
+  + Trả về timestamp từ vệ tinh.
+- Cảm biến mực nước: 
+  + Dựa vào độ cao của mực nước trả về giá trị tương ứng 0 - 1000.
+- Cảm biến đóng mở cốp:
+  + Khi 2 miếng từ gần nhau thì tín hiệu được truyền - trả về giá trị 1
+  + Ngược lại thì trả về 0.
+
 - Vi xử lí đọc dữ liệu từ các cảm biến:
   + Cảm biến GPS lấy về các thông tin: latitude, longtitude, timestamp.
   + Cảm biến đóng mở cốp trả về 1 giá trị: 0/1 (tương ứng với mớ/đóng).
   + Cảm biến mực nước trả về giá trị: 0-1000 (tương ứng với mợc xăng trong bình)
-- Vi xử lí tạo định dạng gói tin gửi đi, trường hợp không đọc được dữ liệu tư thì truyền đi '-1'.
+- Vi xử lí tạo định dạng gói tin gửi đi, trường hợp không đọc được dữ liệu từ cảm biến nào thì truyền đi '-1' tại vị trí tương ứng.
   + date, time, latitude, longtitude, mực xăng, trạng thái cốp
