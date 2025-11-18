@@ -29,9 +29,9 @@ export default function Footer() {
             <div className="bg-red-900 text-red-200 text-center p-4 text-sm">
                 © 2025 Copyright:
                 <a className="text-white ml-1" href="https://mdbootstrap.com/">
-                    MDBootstrap.com
+                    Nhóm 16
                 </a>
-                (Thiết kế cho dự án IoT)
+                (Bài tập lớn IoT)
             </div>
         </footer>
     );

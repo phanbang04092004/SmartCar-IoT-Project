@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useData } from '../context/DataContext';
 
-// Component con để hiển thị đồng hồ bấm giờ (Tách từ Header ra)
+// Component con để hiển thị đồng hồ bấm giờ (Giữ nguyên)
 function LiveTimer({ startTime }) {
     const [duration, setDuration] = useState(0);
 
@@ -35,11 +35,10 @@ export default function HistoryPage() {
 
     return (
         <div className="container mx-auto px-4 py-6">
-            {/* PHẦN ĐIỀU KHIỂN PHIÊN (MỚI) */}
+            {/* PHẦN ĐIỀU KHIỂN PHIÊN (Giữ nguyên) */}
             <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
                 <div className="flex flex-col md:flex-row justify-between items-center">
 
-                    {/* 1. Trạng thái (Nếu đang chạy) */}
                     {isSessionActive ? (
                         <div className="flex items-center space-x-4 p-3 bg-green-100 text-green-800 rounded-lg mb-4 md:mb-0">
                             <i className="fas fa-satellite-dish text-3xl animate-pulse"></i>
@@ -64,7 +63,6 @@ export default function HistoryPage() {
                         </div>
                     )}
 
-                    {/* 2. Nút Bắt đầu / Kết thúc */}
                     <div>
                         {!isSessionActive ? (
                             <button
@@ -85,13 +83,12 @@ export default function HistoryPage() {
                 </div>
             </div>
 
-            {/* PHẦN LỊCH SỬ (Giữ nguyên) */}
-            <div className="bg-white rounded-xl shadow-lg p-6 max-w-5xl mx-auto">
+            {/* PHẦN LỊCH SỬ (Cập nhật bảng) */}
+            <div className="bg-white rounded-xl shadow-lg p-6 max-w-7xl mx-auto"> {/* Mở rộng max-w-7xl */}
                 <h2 className="text-3xl font-bold text-gray-800 mb-6 pb-3 border-b border-gray-200">
                     <i className="fas fa-history mr-3 text-blue-600"></i>
-                    Lịch sử các phiên đã kết thúc
+                    Lịch sử các phiên
                 </h2>
-
                 {sessionHistory.length === 0 ? (
                     <div className="text-center py-10">
                         <i className="fas fa-box-open text-6xl text-gray-300 mb-4"></i>
@@ -100,13 +97,17 @@ export default function HistoryPage() {
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="min-w-full divide-y divide-gray-200">
-                            {/* ... (Phần <thead> và <tbody> của bảng giữ nguyên) ... */}
+                            {/* =============================================== */}
+                            {/* NÂNG CẤP BẢNG (thêm 2 cột) */}
+                            {/* =============================================== */}
                             <thead className="bg-gray-50">
                             <tr>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phiên số</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bắt đầu</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kết thúc</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tổng thời gian</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quãng đường (km)</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nhiên liệu (ml)</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Số lần mở cốp</th>
                             </tr>
                             </thead>
@@ -125,6 +126,15 @@ export default function HistoryPage() {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-700">
                                         <i className="fas fa-clock mr-2"></i>
                                         {session.totalTime}
+                                    </td>
+                                    {/* THÊM DỮ LIỆU MỚI */}
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-purple-700">
+                                        <i className="fas fa-route mr-2"></i>
+                                        {session.totalDistanceKm.toFixed(2)} km
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-700">
+                                        <i className="fas fa-gas-pump mr-2"></i>
+                                        {session.totalFuelConsumed.toLocaleString('vi-VN')} ml
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-yellow-700">
                                         <i className="fas fa-truck-loading mr-2"></i>
