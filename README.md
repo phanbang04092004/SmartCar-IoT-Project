@@ -199,7 +199,7 @@ DATE,TIME,LAT,LNG,FUEL,TRUNK
 
 3. Backend parse & validate thông tin: thời gian, toạ độ, nhiên liệu, trạng thái thùng.
 4. Lưu vào MySQL: `locations`, `fuel_levels`, `trunk_status`.
-5. Phát Socket.IO `statusUpdate` (kèm cảnh báo). Nếu nhiên liệu < 700, tự động tìm trạm xăng và có thể phát thêm `fuelAlert`.
+5. Phát Socket.IO `statusUpdate` (kèm cảnh báo). Nếu nhiên liệu < 500, tự động tìm trạm xăng và có thể phát thêm `fuelAlert`.
 6. Frontend nhận sự kiện, cập nhật context và UI theo thời gian thực.
 
 ---
@@ -228,7 +228,7 @@ DATE,TIME,LAT,LNG,FUEL,TRUNK
     "warning": {
       "message": "🚨 CẢNH BÁO: Mực xăng chỉ còn 180!",
       "fuelLevel": 180,
-      "threshold": 700,
+      "threshold": 500,
       "severity": "CRITICAL"
     },
     "currentLocation": {

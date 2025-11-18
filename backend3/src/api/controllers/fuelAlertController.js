@@ -1,7 +1,7 @@
 const TrackingService = require('../../services/trackingService');
 const GasStationService = require('../../services/gasStationService');
 
-const FUEL_THRESHOLD = 700;  // Ngưỡng cảnh báo
+const FUEL_THRESHOLD = 500;  // Ngưỡng cảnh báo
 const SEARCH_RADIUS = 4000;  // Bán kính tìm kiếm: 4km
 
 class FuelAlertController {

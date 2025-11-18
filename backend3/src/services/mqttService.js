@@ -3,7 +3,7 @@ const TrackingService = require('./trackingService');
 const GasStationService = require('./gasStationService');
 require('dotenv').config();
 
-const FUEL_ALERT_THRESHOLD = 700; // Ngưỡng cảnh báo mực xăng
+const FUEL_ALERT_THRESHOLD = 500; // Ngưỡng cảnh báo mực xăng
 
 class MqttService {
     static init() {
