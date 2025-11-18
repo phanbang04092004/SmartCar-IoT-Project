@@ -61,6 +61,7 @@ class GasStationService {
                         latitude: station.lat,
                         longitude: station.lon,
                         distance: distance,
+                        distanceM: Math.round(distance * 1000), // Thêm distanceM để dễ so sánh
                         distanceText: distance < 1 
                             ? `${Math.round(distance * 1000)}m` 
                             : `${distance.toFixed(2)}km`,
@@ -73,7 +74,8 @@ class GasStationService {
                         osmUrl: `https://www.openstreetmap.org/${station.type}/${station.id}`
                     };
                 })
-                .sort((a, b) => a.distance - b.distance)
+                .filter(station => station.distanceM <= radius) // Lọc theo mét
+                .sort((a, b) => a.distanceM - b.distanceM)
                 .slice(0, limit);
 
             console.log(`✅ Tìm thấy ${gasStations.length} trạm xăng`);
@@ -107,27 +109,35 @@ class GasStationService {
     }
 
     /**
-     * Tính khoảng cách giữa 2 điểm (Haversine)
-     * @returns {number} Khoảng cách (km)
+     * Tính khoảng cách giữa 2 điểm sử dụng công thức Haversine (cải thiện độ chính xác)
+     * @param {number} lat1 - Vĩ độ điểm 1
+     * @param {number} lon1 - Kinh độ điểm 1
+     * @param {number} lat2 - Vĩ độ điểm 2
+     * @param {number} lon2 - Kinh độ điểm 2
+     * @returns {number} Khoảng cách (km) với độ chính xác cao hơn
      */
     static calculateDistance(lat1, lon1, lat2, lon2) {
-        const R = 6371; // Bán kính Trái Đất (km)
-        const dLat = this.toRad(lat2 - lat1);
-        const dLon = this.toRad(lon2 - lon1);
+        // Bán kính Trái Đất trung bình (km) - giá trị chính xác hơn
+        const R = 6371.0088; // Bán kính trung bình (km)
+        
+        // Chuyển đổi sang radian
+        const φ1 = lat1 * Math.PI / 180;
+        const φ2 = lat2 * Math.PI / 180;
+        const Δφ = (lat2 - lat1) * Math.PI / 180;
+        const Δλ = (lon2 - lon1) * Math.PI / 180;
 
-        const a = 
-            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(this.toRad(lat1)) * Math.cos(this.toRad(lat2)) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-
+        // Công thức Haversine
+        const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+                  Math.cos(φ1) * Math.cos(φ2) *
+                  Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+        
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        
+        // Tính khoảng cách (km) - giữ nhiều chữ số thập phân để chính xác hơn
         const distance = R * c;
-
-        return Math.round(distance * 100) / 100;
-    }
-
-    static toRad(degrees) {
-        return degrees * (Math.PI / 180);
+        
+        // Làm tròn đến 3 chữ số thập phân (độ chính xác ~1m)
+        return Math.round(distance * 1000) / 1000;
     }
 
     /**
@@ -168,12 +178,13 @@ class GasStationService {
                 latitude: station.lat,
                 longitude: station.lng,
                 distance,
+                distanceM: Math.round(distance * 1000),
                 distanceText: distance < 1 ? `${Math.round(distance * 1000)}m` : `${distance.toFixed(2)}km`,
                 travelTime: Math.ceil(distance / 40 * 60),
                 googleMapsUrl: `https://www.google.com/maps/dir/?api=1&destination=${station.lat},${station.lng}`,
                 fallback: true
             };
-        }).sort((a, b) => a.distance - b.distance);
+        }).sort((a, b) => a.distanceM - b.distanceM);
     }
 }
 
