@@ -18,7 +18,6 @@
 - Cảm biến đóng mở cốp bao gồm 2 chân:
   + 1 chân kết nối tới cổng GND trên vi xử lí.
   + 1 chân kết nối tới cổng GPIO15 trên vi xử lí.
-
 3. Hoạt động:
 - Cảm biến GPS:
   + Trả về tín hiệu thu được từ vệ tinh, vi xử lí tính toán các giá trị: latitude, longtitude dựa trên tín hiệu này.
