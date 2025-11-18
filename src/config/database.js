@@ -13,7 +13,8 @@ const pool = mysql.createPool({
     connectionLimit: 10,
     queueLimit: 0,
     ssl: {
-        ca: fs.readFileSync(process.env.DB_SSL_CA, 'utf8')
+        ca: fs.readFileSync(process.env.DB_SSL_CA, 'utf8'),
+        rejectUnauthorized: false // ✅ THÊM DÒNG NÀY để chấp nhận self-signed certificate
     }
 });
 

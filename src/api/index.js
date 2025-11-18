@@ -24,13 +24,18 @@ router.get('/', (req, res) => {
             locations: '/api/locations',
             currentLocation: '/api/locations/current',
             route: '/api/locations/route',
+            vehicle: '/api/vehicle',
+            fuelAlert: '/api/fuel-alert',
             health: '/api/health'
         }
     });
 });
 
 const vehicleRoutes = require('./routes/vehicleRoutes');
-
 router.use('/vehicle', vehicleRoutes);
+
+// Thêm route cho fuel alert
+const fuelAlertRoutes = require('./routes/fuelAlertRoutes');
+router.use('/fuel-alert', fuelAlertRoutes);
 
 module.exports = router;

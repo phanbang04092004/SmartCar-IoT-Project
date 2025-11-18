@@ -23,7 +23,7 @@ class VehicleController {
 
       // Tính alert
       const alerts = [];
-      if (vehicle.fuelLevel !== null && vehicle.fuelLevel < 20) alerts.push('Cảnh báo: Mực xăng thấp');
+      if (vehicle.fuelLevel !== null && vehicle.fuelLevel < 500) alerts.push('Cảnh báo: Mực xăng thấp');
       if (vehicle.trunkStatus === 1) alerts.push('Cảnh báo: Cốp đang mở');
 
       res.json({ success: true, vehicle, alerts });

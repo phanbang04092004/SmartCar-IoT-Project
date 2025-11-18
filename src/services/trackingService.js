@@ -144,63 +144,63 @@ class TrackingService {
         }
     }
     // Lấy lịch sử mực xăng
-// Lấy lịch sử mực xăng
-static async getFuelHistory(limit = 100, startTime, endTime) {
-    try {
-        let query = 'SELECT id, timestamp, level, created_at FROM fuel_levels WHERE 1=1';
-        const params = [];
+    static async getFuelHistory(limit = 100, startTime, endTime) {
+        try {
+            let query = 'SELECT id, timestamp, level, created_at FROM fuel_levels WHERE 1=1';
+            const params = [];
 
-        if (startTime) {
-            query += ' AND timestamp >= ?';
-            params.push(startTime);
+            if (startTime) {
+                query += ' AND timestamp >= ?';
+                params.push(startTime);
+            }
+            if (endTime) {
+                query += ' AND timestamp <= ?';
+                params.push(endTime);
+            }
+
+            // validate limit
+            limit = parseInt(limit);
+            if (isNaN(limit) || limit <= 0) limit = 100;
+
+            query += ` ORDER BY timestamp DESC LIMIT ${limit}`; // bind trực tiếp
+
+            const [rows] = await db.execute(query, params);
+            return rows;
+        } catch (error) {
+            console.error('Lỗi query fuel_levels:', error.message);
+            throw error;
         }
-        if (endTime) {
-            query += ' AND timestamp <= ?';
-            params.push(endTime);
-        }
-
-        // validate limit
-        limit = parseInt(limit);
-        if (isNaN(limit) || limit <= 0) limit = 100;
-
-        query += ` ORDER BY timestamp DESC LIMIT ${limit}`; // bind trực tiếp
-
-        const [rows] = await db.execute(query, params);
-        return rows;
-    } catch (error) {
-        console.error('Lỗi query fuel_levels:', error.message);
-        throw error;
     }
-}
 
-// Lấy lịch sử trạng thái cốp
-static async getTrunkHistory(limit = 100, startTime, endTime) {
-    try {
-        let query = 'SELECT id, timestamp, status, created_at FROM trunk_status WHERE 1=1';
-        const params = [];
+    // Lấy lịch sử trạng thái cốp
+    static async getTrunkHistory(limit = 100, startTime, endTime) {
+        try {
+            let query = 'SELECT id, timestamp, status, created_at FROM trunk_status WHERE 1=1';
+            const params = [];
 
-        if (startTime) {
-            query += ' AND timestamp >= ?';
-            params.push(startTime);
+            if (startTime) {
+                query += ' AND timestamp >= ?';
+                params.push(startTime);
+            }
+            if (endTime) {
+                query += ' AND timestamp <= ?';
+                params.push(endTime);
+            }
+
+            // validate limit
+            limit = parseInt(limit);
+            if (isNaN(limit) || limit <= 0) limit = 100;
+
+            query += ` ORDER BY timestamp DESC LIMIT ${limit}`; // bind trực tiếp
+
+            const [rows] = await db.execute(query, params);
+            return rows;
+        } catch (error) {
+            console.error('Lỗi query trunk_status:', error.message);
+            throw error;
         }
-        if (endTime) {
-            query += ' AND timestamp <= ?';
-            params.push(endTime);
-        }
-
-        // validate limit
-        limit = parseInt(limit);
-        if (isNaN(limit) || limit <= 0) limit = 100;
-
-        query += ` ORDER BY timestamp DESC LIMIT ${limit}`; // bind trực tiếp
-
-        const [rows] = await db.execute(query, params);
-        return rows;
-    } catch (error) {
-        console.error('Lỗi query trunk_status:', error.message);
-        throw error;
     }
-}
+   
 }
 
 module.exports = TrackingService;

@@ -6,7 +6,6 @@ const { Server } = require('socket.io');
 
 const apiRoutes = require('./src/api');
 const MqttService = require('./src/services/mqttService');
-
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: '*' } });
@@ -30,7 +29,16 @@ app.get('/', (req, res) => {
     res.json({
         message: 'Vehicle Tracking Backend API',
         version: '1.0.0',
-        documentation: '/api'
+        documentation: '/api',
+        endpoints: {
+            api: '/api',
+            locations: '/api/locations',
+            currentLocation: '/api/locations/current',
+            route: '/api/locations/route',
+            vehicle: '/api/vehicle',
+            fuelAlert: '/api/fuel-alert',
+            health: '/api/health'
+        }
     });
 });
 
