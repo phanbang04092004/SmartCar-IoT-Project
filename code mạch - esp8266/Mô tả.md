@@ -6,7 +6,7 @@
 - Dây dẫn
 - Nguồn - 5V từ máy tính
 2. Nối dây:
-- Cấp nguền cho vi xử lí bằng cổng type-C trên vi xử lí, chân này cũng dùng để truyền chương trình tới vi xử lí.
+- Cấp nguồn cho vi xử lí bằng cổng type-C trên vi xử lí, chân này cũng dùng để truyền chương trình tới vi xử lí.
 - Cảm biến GPS bao gồm 5 chân:
   + 1 chân kết nối tới anten.
   + 2 chân GND và VCC kết nối lần lướt tới cổng GND và 3.3V trên vi xử lí để cấp nguồn cho cảm biến
